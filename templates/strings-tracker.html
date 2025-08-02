@@ -1,0 +1,109 @@
+<div class="tsl-strings-tracker">
+  {{#if noActor}}
+    <div class="no-actor">
+      <p>Select a character token to track strings.</p>
+    </div>
+  {{else}}
+    <div class="strings-header">
+      <div class="actor-token">
+        <img src="{{actor.img}}" alt="{{actorName}}" />
+      </div>
+      <div class="strings-title">
+        <h2>{{actorName}}'s Strings</h2>
+        <p>Click dots to mark strings • Click "Spend" to use for +1 bonus</p>
+      </div>
+    </div>
+
+    <div class="strings-grid">
+      {{#if characters}}
+        {{#each characters}}
+          <div class="character-row" data-character-id="{{id}}">
+            <div class="character-info">
+              <div class="character-token" style="background-color: {{color}}">
+                {{#if token.texture.src}}
+                  <img src="{{token.texture.src}}" alt="{{name}}" />
+                {{else}}
+                  <span class="token-initial">{{substr name 0 1}}</span>
+                {{/if}}
+              </div>
+              <div class="character-name">{{name}}</div>
+            </div>
+            
+            <div class="string-controls">
+              <div class="string-counter">
+                {{#each (range 1 5)}}
+                  <button class="string-dot {{#if (gte ../strings.this @index)}}active{{/if}}" 
+                          data-character-id="{{../id}}" 
+                          data-string-level="{{this}}"
+                          title="String {{this}}">
+                    {{this}}
+                  </button>
+                {{/each}}
+              </div>
+              
+              <button class="spend-string" 
+                      data-character-id="{{id}}"
+                      {{#unless (gt ../strings.this 0)}}disabled{{/unless}}
+                      title="Spend a string for +1 to next roll">
+                <i class="fas fa-heart"></i> Spend
+              </button>
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="no-characters">
+          <p>No other characters found in this scene.</p>
+          <button class="add-character">
+            <i class="fas fa-plus"></i> Add Character
+          </button>
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="strings-footer">
+      <div class="string-summary">
+        <strong>Total Strings:</strong> 
+        {{#each strings}}
+          {{@key}}: {{this}} 
+        {{/each}}
+      </div>
+      
+      <div class="footer-controls">
+        <button class="add-character">
+          <i class="fas fa-user-plus"></i> Add Character
+        </button>
+        
+        <button class="refresh-tracker" onclick="this.closest('.window-app').render(true)">
+          <i class="fas fa-sync"></i> Refresh
+        </button>
+      </div>
+    </div>
+  {{/if}}
+</div>
+
+<!-- Handlebars Helpers -->
+<script>
+  // Helper to create range for string dots
+  Handlebars.registerHelper('range', function(start, end) {
+    const result = [];
+    for (let i = start; i <= end; i++) {
+      result.push(i);
+    }
+    return result;
+  });
+
+  // Helper to check if value is greater than or equal
+  Handlebars.registerHelper('gte', function(a, b) {
+    return a >= b;
+  });
+
+  // Helper to check if value is greater than
+  Handlebars.registerHelper('gt', function(a, b) {
+    return a > b;
+  });
+
+  // Helper to get substring
+  Handlebars.registerHelper('substr', function(str, start, length) {
+    return str.substr(start, length);
+  });
+</script>
