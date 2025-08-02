@@ -1,0 +1,56 @@
+{
+  "tsl-strings-tracker": {
+    "title": "TSL Strings Tracker",
+    "description": "Visual strings tracking for Thirsty Sword Lesbians",
+    
+    "ui": {
+      "noActor": "Select a character token to track strings.",
+      "noCharacters": "No other characters found in this scene.",
+      "stringsTitle": "{name}'s Strings",
+      "instructions": "Click dots to mark strings • Click \"Spend\" to use for +1 bonus",
+      "totalStrings": "Total Strings:",
+      "spendString": "Spend",
+      "addCharacter": "Add Character",
+      "refresh": "Refresh"
+    },
+    
+    "notifications": {
+      "noStrings": "No strings to spend on this character!",
+      "stringSpent": "String spent! Next roll gets +1 bonus",
+      "stringGained": "{actor} gained a string on {target} ({total} total)",
+      "stringLost": "{actor} lost a string on {target} ({total} total)",
+      "bonusApplied": "+{bonus} from {reason}"
+    },
+    
+    "settings": {
+      "autoApplyBonus": {
+        "name": "Auto-apply string bonuses to rolls",
+        "hint": "Automatically apply +1 bonus when strings are spent"
+      },
+      "playerAccess": {
+        "name": "Allow players to open strings tracker",
+        "hint": "If disabled, only GMs can open the strings tracker"
+      },
+      "showToolbarButton": {
+        "name": "Show strings button in token controls",
+        "hint": "Display the strings tracker button in the left toolbar"
+      }
+    },
+    
+    "chat": {
+      "stringSpent": "<strong>{actor}</strong> spent a string on <strong>{target}</strong>!<br><em>Next roll gets +1 bonus</em>",
+      "stringGained": "{actor} gained a string on {target}",
+      "stringLost": "{actor} lost a string on {target}"
+    },
+    
+    "dialogs": {
+      "addCharacter": {
+        "title": "Add Character",
+        "nameLabel": "Character Name:",
+        "namePlaceholder": "Enter character name",
+        "add": "Add",
+        "cancel": "Cancel"
+      }
+    }
+  }
+}
