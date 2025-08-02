@@ -40,6 +40,6 @@
     "scripts/tsl-strings.js"
   ],
   "url": "https://github.com/darkjenso/TSL-Strings-Tracker",
-  "manifest": "https://raw.githubusercontent.com/darkjenso/TSL-Strings-Tracker/main/module.json",
+  "manifest": "https://raw.githubusercontent.com/darkjenso/TSL-Strings-Tracker/refs/heads/main/module.json",
   "download": "https://github.com/darkjenso/TSL-Strings-Tracker/releases/latest/download/TSL-Strings-Tracker.zip"
 }
