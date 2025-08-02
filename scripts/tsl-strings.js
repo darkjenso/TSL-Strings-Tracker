@@ -211,12 +211,7 @@ Hooks.once('init', () => {
     type: Boolean,
     default: true
   });
-});
 
-Hooks.once('ready', () => {
-  console.log('TSL Strings Tracker | Module ready');
-  
-  // Register additional settings if needed
   game.settings.register('tsl-strings-tracker', 'playerAccess', {
     name: 'Allow players to open strings tracker',
     hint: 'If disabled, only GMs can open the strings tracker',
@@ -235,6 +230,10 @@ Hooks.once('ready', () => {
     default: true,
     onChange: () => ui.controls.render()
   });
+});
+
+Hooks.once('ready', () => {
+  console.log('TSL Strings Tracker | Module ready');
 });
 
 // Add strings tracker button to token controls
