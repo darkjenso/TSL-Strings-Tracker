@@ -37,19 +37,21 @@ class TSLStringsTracker extends Application {
   getOtherCharacters(currentActor) {
     const characters = [];
     
-    // Get all actors in the current scene
-    if (canvas.scene) {
-      for (let token of canvas.scene.tokens) {
-        const actor = token.actor;
-        if (actor && actor.id !== currentActor.id && actor.type === 'character') {
-          characters.push({
-            id: actor.id,
-            name: actor.name,
-            token: token,
-            color: this.getCharacterColor(actor.id)
-          });
-        }
-      }
+    // Get all character actors in the world (not just scene tokens)
+    const allCharacters = game.actors.filter(actor => 
+      actor.type === 'character' && actor.id !== currentActor.id
+    );
+    
+    for (let actor of allCharacters) {
+      // Try to find a token for this actor in the current scene for the image
+      const sceneToken = canvas.scene?.tokens.find(t => t.actorId === actor.id);
+      
+      characters.push({
+        id: actor.id,
+        name: actor.name,
+        token: sceneToken || null,
+        color: this.getCharacterColor(actor.id)
+      });
     }
     
     return characters;
@@ -259,31 +261,85 @@ Hooks.on('getSceneControlButtons', (controls) => {
     icon: 'fas fa-heart',
     button: true,
     onClick: () => {
+      // Try to find the user's character first
+      let selectedActor = null;
+      
       // Check if a token is selected
       const controlled = canvas.tokens.controlled;
-      if (controlled.length === 0) {
-        ui.notifications.warn('Please select a character token first.');
+      if (controlled.length === 1 && controlled[0].actor?.type === 'character') {
+        selectedActor = controlled[0].actor;
+      }
+      
+      // If no token selected, try to find user's assigned character
+      if (!selectedActor && !game.user.isGM) {
+        selectedActor = game.user.character;
+      }
+      
+      // If still no character, show character selection dialog
+      if (!selectedActor) {
+        showCharacterSelectionDialog();
         return;
       }
       
-      if (controlled.length > 1) {
-        ui.notifications.warn('Please select only one character token.');
-        return;
-      }
-      
-      const token = controlled[0];
-      if (!token.actor || token.actor.type !== 'character') {
-        ui.notifications.warn('Please select a character token.');
-        return;
-      }
-      
-      // Open strings tracker for the selected character
+      // Open strings tracker for the found character
       const tracker = new TSLStringsTracker();
-      tracker.actor = token.actor;
+      tracker.actor = selectedActor;
       tracker.render(true);
     }
   });
 });
+
+// Character selection dialog for when no character is obvious
+function showCharacterSelectionDialog() {
+  const characters = game.actors.filter(a => a.type === 'character');
+  
+  if (characters.length === 0) {
+    ui.notifications.warn('No characters found. Create a character first.');
+    return;
+  }
+  
+  // If only one character, use it
+  if (characters.length === 1) {
+    const tracker = new TSLStringsTracker();
+    tracker.actor = characters[0];
+    tracker.render(true);
+    return;
+  }
+  
+  // Multiple characters - show selection dialog
+  const options = characters.map(char => `<option value="${char.id}">${char.name}</option>`).join('');
+  
+  new Dialog({
+    title: "Select Character",
+    content: `
+      <form>
+        <div class="form-group">
+          <label>Choose your character:</label>
+          <select name="character-select" style="width: 100%;">
+            ${options}
+          </select>
+        </div>
+      </form>
+    `,
+    buttons: {
+      open: {
+        label: "Open Strings Tracker",
+        callback: (html) => {
+          const selectedId = html.find('[name="character-select"]').val();
+          const selectedActor = game.actors.get(selectedId);
+          if (selectedActor) {
+            const tracker = new TSLStringsTracker();
+            tracker.actor = selectedActor;
+            tracker.render(true);
+          }
+        }
+      },
+      cancel: {
+        label: "Cancel"
+      }
+    }
+  }).render(true);
+}
 
 // Hook into PbtA rolls to apply string bonuses
 Hooks.on('preCreateChatMessage', (message) => {

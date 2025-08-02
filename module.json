@@ -2,7 +2,7 @@
   "id": "tsl-strings-tracker",
   "title": "Thirsty Sword Lesbians - Strings Tracker",
   "description": "A visual strings tracking system for Thirsty Sword Lesbians using official VTT assets",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": {
     "minimum": "10",
     "verified": "12",

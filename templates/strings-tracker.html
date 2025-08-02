@@ -20,8 +20,12 @@
           <div class="character-row" data-character-id="{{id}}">
             <div class="character-info">
               <div class="character-token" style="background-color: {{color}}">
-                {{#if token.texture.src}}
-                  <img src="{{token.texture.src}}" alt="{{name}}" />
+                {{#if token}}
+                  {{#if token.texture.src}}
+                    <img src="{{token.texture.src}}" alt="{{name}}" />
+                  {{else}}
+                    <span class="token-initial">{{substr name 0 1}}</span>
+                  {{/if}}
                 {{else}}
                   <span class="token-initial">{{substr name 0 1}}</span>
                 {{/if}}

@@ -18,7 +18,7 @@ A visual strings tracking system for Thirsty Sword Lesbians in Foundry VTT, desi
 
 ## How It Works
 
-Select a character token, click the heart button in the token controls, and the strings tracker opens. Click the numbered dots to mark strings on other characters, then spend them for +1 bonuses to rolls involving those characters. Bonuses automatically apply to 2d6 PbtA rolls.
+Click the heart button in the token controls to open the strings tracker. The module will automatically find your character (via assigned character or selected token), or show a character selection dialog if needed. Click the numbered dots to mark strings on other characters, then spend them for +1 bonuses to rolls involving those characters. Bonuses automatically apply to 2d6 PbtA rolls.
 
 ## Installation
 
@@ -42,10 +42,11 @@ Select a character token, click the heart button in the token controls, and the 
 ### Opening the Tracker
 
 **Token Controls Method:**
-1. Select a character token
-2. Make sure the Token tool is active in the left sidebar
-3. Click the heart button
-4. The tracker opens for that character
+1. Click the heart button in the token controls (left sidebar)
+2. The module will automatically:
+   - Use your selected character token (if any)
+   - Use your assigned character (if you're a player)
+   - Show a character selection dialog (if multiple options)
 
 **Console/Macro Method:**
 - Console: `openTSLStrings()`
@@ -60,7 +61,7 @@ Click the numbered dots (1-4) to set how many strings you have on each character
 Click the "Spend" button next to a character to spend a string. This automatically gives you +1 to your next PbtA roll and decreases your string count.
 
 **Character Detection:**
-The tracker finds all character tokens in the current scene and assigns each one a consistent color.
+The tracker finds all character actors in your world (not just scene tokens) and assigns each one a consistent color. This works great for narrative-focused TSL games where you might not have all characters as tokens on every scene.
 
 ## Settings
 
