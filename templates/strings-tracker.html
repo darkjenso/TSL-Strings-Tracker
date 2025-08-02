@@ -36,7 +36,7 @@
             <div class="string-controls">
               <div class="string-counter">
                 {{#each (range 1 5)}}
-                  <button class="string-dot {{#if (gte ../strings.this @index)}}active{{/if}}" 
+                  <button class="string-dot {{#if (gte (lookup ../../strings ../id) this)}}active{{/if}}" 
                           data-character-id="{{../id}}" 
                           data-string-level="{{this}}"
                           title="String {{this}}">
@@ -47,7 +47,7 @@
               
               <button class="spend-string" 
                       data-character-id="{{id}}"
-                      {{#unless (gt ../strings.this 0)}}disabled{{/unless}}
+                      {{#unless (gt (lookup ../strings id) 0)}}disabled{{/unless}}
                       title="Spend a string for +1 to next roll">
                 <i class="fas fa-heart"></i> Spend
               </button>
@@ -109,5 +109,10 @@
   // Helper to get substring
   Handlebars.registerHelper('substr', function(str, start, length) {
     return str.substr(start, length);
+  });
+
+  // Helper to lookup object properties dynamically
+  Handlebars.registerHelper('lookup', function(obj, key) {
+    return obj ? obj[key] || 0 : 0;
   });
 </script>
