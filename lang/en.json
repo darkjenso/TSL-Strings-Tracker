@@ -4,8 +4,8 @@
     "description": "Visual strings tracking for Thirsty Sword Lesbians",
     
     "ui": {
-      "noActor": "Select a character token to track strings.",
-      "noCharacters": "No other characters found in this scene.",
+      "noActor": "No character selected. Use the heart button in token controls to open the tracker.",
+      "noCharacters": "No other characters found in this world.",
       "stringsTitle": "{name}'s Strings",
       "instructions": "Click dots to mark strings • Click \"Spend\" to use for +1 bonus",
       "totalStrings": "Total Strings:",

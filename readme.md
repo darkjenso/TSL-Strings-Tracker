@@ -18,7 +18,13 @@ A visual strings tracking system for Thirsty Sword Lesbians in Foundry VTT, desi
 
 ## How It Works
 
-Click the heart button in the token controls to open the strings tracker. The module will automatically find your character (via assigned character or selected token), or show a character selection dialog if needed. Click the numbered dots to mark strings on other characters, then spend them for +1 bonuses to rolls involving those characters. Bonuses automatically apply to 2d6 PbtA rolls.
+Click the heart button in the token controls to open the strings tracker. The module automatically finds your character using this priority:
+
+1. **Selected token** - If you have a character token selected
+2. **Assigned character** - Your assigned character (for players)  
+3. **Character selection** - Shows a dialog with all available characters
+
+Once open, click the numbered dots to mark strings on other characters from your Actors tab, then spend them for +1 bonuses to rolls. Bonuses automatically apply to 2d6 PbtA rolls.
 
 ## Installation
 
@@ -28,7 +34,7 @@ Click the heart button in the token controls to open the strings tracker. The mo
 3. Click Install Module
 4. Paste this manifest URL:
    ```
-   https://raw.githubusercontent.com/darkjenso/TSL-Strings-Tracker/main/module.json
+   https://raw.githubusercontent.com/darkjenso/TSL-Strings-Tracker/refs/heads/main/module.json
    ```
 5. Click Install and activate in your world
 
@@ -43,10 +49,10 @@ Click the heart button in the token controls to open the strings tracker. The mo
 
 **Token Controls Method:**
 1. Click the heart button in the token controls (left sidebar)
-2. The module will automatically:
-   - Use your selected character token (if any)
-   - Use your assigned character (if you're a player)
-   - Show a character selection dialog (if multiple options)
+2. The module automatically finds your character:
+   - Uses your selected character token (if any)
+   - Uses your assigned character (if you're a player)
+   - Shows character selection dialog (if multiple characters exist)
 
 **Console/Macro Method:**
 - Console: `openTSLStrings()`
@@ -61,7 +67,7 @@ Click the numbered dots (1-4) to set how many strings you have on each character
 Click the "Spend" button next to a character to spend a string. This automatically gives you +1 to your next PbtA roll and decreases your string count.
 
 **Character Detection:**
-The tracker finds all character actors in your world (not just scene tokens) and assigns each one a consistent color. This works great for narrative-focused TSL games where you might not have all characters as tokens on every scene.
+The tracker finds all character actors from your Actors tab (not just scene tokens) and assigns each one a consistent color. This works perfectly for narrative-focused TSL games where characters don't need to be placed as tokens on scenes. If a character has a token on the current scene, it will use that token's image; otherwise, it shows the character's initial in a colored circle.
 
 ## Settings
 

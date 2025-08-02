@@ -37,7 +37,7 @@ class TSLStringsTracker extends Application {
   getOtherCharacters(currentActor) {
     const characters = [];
     
-    // Get all character actors in the world (not just scene tokens)
+    // Get all character actors from the Actors tab (not just scene tokens)
     const allCharacters = game.actors.filter(actor => 
       actor.type === 'character' && actor.id !== currentActor.id
     );
@@ -49,7 +49,7 @@ class TSLStringsTracker extends Application {
       characters.push({
         id: actor.id,
         name: actor.name,
-        token: sceneToken || null,
+        token: sceneToken || null, // Token is optional - just used for image
         color: this.getCharacterColor(actor.id)
       });
     }
@@ -261,21 +261,25 @@ Hooks.on('getSceneControlButtons', (controls) => {
     icon: 'fas fa-heart',
     button: true,
     onClick: () => {
-      // Try to find the user's character first
+      // Priority order for finding the character:
+      // 1. Selected character token (if any)
+      // 2. User's assigned character (for players)
+      // 3. Show character selection dialog
+      
       let selectedActor = null;
       
-      // Check if a token is selected
+      // Check if a character token is selected
       const controlled = canvas.tokens.controlled;
       if (controlled.length === 1 && controlled[0].actor?.type === 'character') {
         selectedActor = controlled[0].actor;
       }
       
-      // If no token selected, try to find user's assigned character
-      if (!selectedActor && !game.user.isGM) {
+      // If no token selected and user is a player, try their assigned character
+      if (!selectedActor && !game.user.isGM && game.user.character) {
         selectedActor = game.user.character;
       }
       
-      // If still no character, show character selection dialog
+      // If still no character found, show selection dialog
       if (!selectedActor) {
         showCharacterSelectionDialog();
         return;
@@ -294,7 +298,7 @@ function showCharacterSelectionDialog() {
   const characters = game.actors.filter(a => a.type === 'character');
   
   if (characters.length === 0) {
-    ui.notifications.warn('No characters found. Create a character first.');
+    ui.notifications.warn('No characters found in this world. Create a character first.');
     return;
   }
   
@@ -319,6 +323,9 @@ function showCharacterSelectionDialog() {
             ${options}
           </select>
         </div>
+        <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
+          All characters from the Actors tab are available for string tracking.
+        </p>
       </form>
     `,
     buttons: {
@@ -337,7 +344,8 @@ function showCharacterSelectionDialog() {
       cancel: {
         label: "Cancel"
       }
-    }
+    },
+    default: "open"
   }).render(true);
 }
 
