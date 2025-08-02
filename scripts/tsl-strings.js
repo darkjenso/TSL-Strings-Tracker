@@ -5,7 +5,7 @@
 
 class TSLStringsTracker extends Application {
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       id: "tsl-strings-tracker",
       title: "TSL Strings Tracker",
       template: "modules/tsl-strings-tracker/templates/strings-tracker.html",
@@ -81,6 +81,9 @@ class TSLStringsTracker extends Application {
     
     // Add character button
     html.find('.add-character').click(this._onAddCharacter.bind(this));
+    
+    // Refresh tracker button
+    html.find('.refresh-tracker').click(this._onRefreshTracker.bind(this));
   }
 
   async _onStringDotClick(event) {
@@ -198,6 +201,11 @@ class TSLStringsTracker extends Application {
       }
     }).render(true);
   }
+
+  _onRefreshTracker(event) {
+    event.preventDefault();
+    this.render(true);
+  }
 }
 
 // Initialize module
@@ -253,6 +261,11 @@ Hooks.on('getSceneControlButtons', (controls) => {
   // Find the token controls
   const tokenControls = controls.find(c => c.name === 'token');
   if (!tokenControls) return;
+
+  // Check if our tool already exists (prevent duplicates)
+  if (tokenControls.tools.find(t => t.name === 'tsl-strings')) {
+    return;
+  }
 
   // Add our strings tracker tool
   tokenControls.tools.push({
