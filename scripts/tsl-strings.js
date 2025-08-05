@@ -240,11 +240,54 @@ Hooks.once('init', () => {
     default: true,
     onChange: () => ui.controls.render()
   });
+
+  // Settings menu button to open the tracker
+  game.settings.registerMenu('tsl-strings-tracker', 'openTracker', {
+    name: 'Open Strings Tracker',
+    label: 'Open Tracker',
+    icon: 'fa-solid fa-heart',
+    restricted: false,
+    onClick: () => openStringsTracker()
+  });
 });
 
 Hooks.once('ready', () => {
   console.log('TSL Strings Tracker | Module ready');
 });
+
+/**
+ * Open the strings tracker for an appropriate actor or prompt for one.
+ */
+function openStringsTracker() {
+  // Priority order for finding the character:
+  // 1. Selected character token (if any)
+  // 2. User's assigned character (for players)
+  // 3. Show character selection dialog
+
+  let selectedActor = null;
+
+  // Check if a character token is selected
+  const controlled = canvas.tokens.controlled;
+  if (controlled.length === 1 && controlled[0].actor?.type === 'character') {
+    selectedActor = controlled[0].actor;
+  }
+
+  // If no token selected and user is a player, try their assigned character
+  if (!selectedActor && !game.user.isGM && game.user.character) {
+    selectedActor = game.user.character;
+  }
+
+  // If still no character found, show selection dialog
+  if (!selectedActor) {
+    showCharacterSelectionDialog();
+    return;
+  }
+
+  // Open strings tracker for the found character
+  const tracker = new TSLStringsTracker();
+  tracker.actor = selectedActor;
+  tracker.render(true);
+}
 
 // Add strings tracker button to token controls
 Hooks.on('getSceneControlButtons', (controls) => {
@@ -257,56 +300,35 @@ Hooks.on('getSceneControlButtons', (controls) => {
   if (!game.user.isGM && !game.settings.get('tsl-strings-tracker', 'playerAccess')) {
     return;
   }
+
   // Foundry VTT v13 passes a SceneControls instance instead of an array
   // of controls. Support both formats for backward compatibility.
-  const controlsArray = Array.isArray(controls) ? controls : controls.controls;
+  const controlsArray = Array.isArray(controls) ? controls : controls?.controls;
 
-  // Find the token controls
-  const tokenControls = controlsArray?.find(c => c.name === 'token');
+  // Find the token controls (token, tokens, or select in newer versions)
+  const tokenControls = controlsArray?.find?.(c => ['token', 'tokens', 'select'].includes(c.name));
   if (!tokenControls) return;
 
+  const tools = tokenControls.tools;
   // Check if our tool already exists (prevent duplicates)
-  if (tokenControls.tools.find(t => t.name === 'tsl-strings')) {
-    return;
-  }
+  const hasTool = tools?.find?.(t => t.name === 'tsl-strings') || tools?.has?.('tsl-strings');
+  if (hasTool) return;
 
-  // Add our strings tracker tool
-  tokenControls.tools.push({
+  const tool = {
     name: 'tsl-strings',
     title: 'TSL Strings Tracker',
-    icon: 'fas fa-heart',
+    icon: 'fa-solid fa-heart',
     button: true,
-    onClick: () => {
-      // Priority order for finding the character:
-      // 1. Selected character token (if any)
-      // 2. User's assigned character (for players)
-      // 3. Show character selection dialog
-      
-      let selectedActor = null;
-      
-      // Check if a character token is selected
-      const controlled = canvas.tokens.controlled;
-      if (controlled.length === 1 && controlled[0].actor?.type === 'character') {
-        selectedActor = controlled[0].actor;
-      }
-      
-      // If no token selected and user is a player, try their assigned character
-      if (!selectedActor && !game.user.isGM && game.user.character) {
-        selectedActor = game.user.character;
-      }
-      
-      // If still no character found, show selection dialog
-      if (!selectedActor) {
-        showCharacterSelectionDialog();
-        return;
-      }
-      
-      // Open strings tracker for the found character
-      const tracker = new TSLStringsTracker();
-      tracker.actor = selectedActor;
-      tracker.render(true);
-    }
-  });
+    onClick: () => openStringsTracker()
+  };
+
+  if (Array.isArray(tools)) {
+    tools.push(tool);
+  } else if (tools?.set) {
+    tools.set(tool.name, tool);
+  } else if (tokenControls.addTool) {
+    tokenControls.addTool(tool);
+  }
 });
 
 // Character selection dialog for when no character is obvious
@@ -331,6 +353,7 @@ function showCharacterSelectionDialog() {
   
   new Dialog({
     title: "Select Character",
+    content: `
     content: `
       <form>
         <div class="form-group">
