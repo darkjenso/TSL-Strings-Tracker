@@ -354,7 +354,6 @@ function showCharacterSelectionDialog() {
   new Dialog({
     title: "Select Character",
     content: `
-    content: `
       <form>
         <div class="form-group">
           <label>Choose your character:</label>
