@@ -258,8 +258,12 @@ Hooks.on('getSceneControlButtons', (controls) => {
     return;
   }
 
+  // Foundry VTT v13 passes a SceneControls instance instead of an array
+  // of controls. Support both formats for backward compatibility.
+  const controlsArray = Array.isArray(controls) ? controls : controls.controls;
+
   // Find the token controls
-  const tokenControls = controls.find(c => c.name === 'token');
+  const tokenControls = controlsArray?.find(c => c.name === 'token');
   if (!tokenControls) return;
 
   // Check if our tool already exists (prevent duplicates)
