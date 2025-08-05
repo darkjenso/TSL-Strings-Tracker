@@ -4,8 +4,8 @@
   "description": "A visual strings tracking system for Thirsty Sword Lesbians using official VTT assets",
   "version": "1.5.2",
   "compatibility": {
-    "minimum": "10",
-    "verified": "12",
+    "minimum": "13",
+    "verified": "13",
     "maximum": "13"
   },
   "authors": [
